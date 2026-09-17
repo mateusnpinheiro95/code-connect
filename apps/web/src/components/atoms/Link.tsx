@@ -18,7 +18,7 @@ export function Link({
 
   return (
     <a
-      className={`cursor-pointer text-[15px] transition-colors ${variantStyles[variant]} ${className}`}
+      className={`cursor-pointer text-body-sm transition-colors ${variantStyles[variant]} ${className}`}
       {...props}
     >
       {children}

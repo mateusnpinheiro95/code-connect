@@ -10,23 +10,27 @@ interface RememberMeCheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElem
 export const RememberMeCheckbox = forwardRef<HTMLInputElement, RememberMeCheckboxProps>(
   ({ onForgotPassword, ...props }, ref) => {
     return (
-      <div className="flex w-full items-center justify-between gap-4">
+      <div
+        className={`flex w-full items-center gap-4 ${onForgotPassword ? 'justify-between' : ''}`}
+      >
         <Checkbox
           ref={ref}
           id="remember-me"
           label="Lembrar-me"
           {...props}
         />
-        <Link
-          variant="secondary"
-          href="#esqueci-a-senha"
-          onClick={(event) => {
-            event.preventDefault()
-            onForgotPassword?.()
-          }}
-        >
-          Esqueci a senha
-        </Link>
+        {onForgotPassword && (
+          <Link
+            variant="secondary"
+            href="#esqueci-a-senha"
+            onClick={(event) => {
+              event.preventDefault()
+              onForgotPassword()
+            }}
+          >
+            Esqueci a senha
+          </Link>
+        )}
       </div>
     )
   }

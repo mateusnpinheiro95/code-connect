@@ -22,6 +22,9 @@ pnpm dev:api      # Nest watch
 pnpm build:web / build:api
 pnpm lint:web / lint:api
 pnpm test:api
+pnpm test:web     # vitest (watch)
+pnpm test:web:a11y # WCAG AA automated checks (axe / vitest-axe)
+pnpm preview:web  # build:web + start:web (Lighthouse / prod preview)
 ```
 
 Package manager is **pnpm** only (`packageManager` in root `package.json`). Do not introduce npm/yarn lockfiles.
@@ -31,6 +34,78 @@ Package manager is **pnpm** only (`packageManager` in root `package.json`). Do n
 - Structure UI with **Atomic Design**: `atoms` → `molecules` → `organisms` → `templates` → `pages`.
 - Style with **Tailwind CSS** only (utility classes; avoid ad-hoc CSS/modules unless unavoidable).
 - Every component must ship with a test covering its **essential usage** (render + primary interaction/props). Colocate or mirror under the same atomic layer.
+
+### Design tokens (`apps/web/src/index.css`)
+
+Tokens live in Tailwind v4 `@theme`. **Never hardcode hex colors or arbitrary sizes** (`text-[31px]`, `rounded-[32px]`, `#81fe88`, etc.) in components — add or reuse a token, then use the utility.
+
+#### Colors
+
+| Token | Utility examples | Use |
+|-------|------------------|-----|
+| `primary` / `primary-dark` | `bg-primary`, `text-primary`, `hover:bg-primary-dark` | CTAs, accents, focus, links |
+| `on-primary` | `text-on-primary` | Text on primary surfaces |
+| `dark` | `bg-dark` | Page background |
+| `dark-card` | `bg-dark-card` | Cards, auth shell |
+| `dark-lighter` | `bg-dark-lighter`, `border-dark-lighter` | Inputs, borders, dividers |
+| `text-primary` / `text-secondary` | `text-text-primary`, `text-text-secondary` | Body / muted text |
+| `error` | `text-error`, `border-error` | Validation errors |
+| `pattern` | (CSS / `.bg-auth-pattern`) | Watermark stroke |
+
+#### Typography
+
+| Token | Size | Utility | Use |
+|-------|------|---------|-----|
+| `display` | 31px | `text-display` | Page titles (Login, Cadastro) |
+| `subtitle` | 22px | `text-subtitle` | Subtitles |
+| `body` | 18px | `text-body` | Labels, buttons, footer |
+| `body-sm` | 15px | `text-body-sm` | Inputs, helpers, checkbox/link default |
+| `label` | 12.5px | `text-label` | Social button captions |
+
+Font family: `font-sans` → Prompt (defined in `@theme`).
+
+#### Radii & layout
+
+| Token | Utility | Use |
+|-------|---------|-----|
+| `radius-auth` | `rounded-auth` | Auth card (32px) |
+| `radius-button` | `rounded-button` | Buttons / social (8px) |
+| `radius-input` | `rounded-input` | Inputs (4px) |
+| `width-auth-banner` | `w-auth-banner` | Banner column (407px) |
+| `width-auth-form-col` | `w-auth-form-col` | Form column (410px) |
+| `max-width-auth-form` | `max-w-auth-form` | Fields / CTA width (318px) |
+| `max-width-auth-card` | `max-w-auth-card` | Auth card max width (996px) |
+| `spacing-auth-card-x` / `y` | `px-auth-card-x`, `py-auth-card-y` | Card padding (78px / 56px) |
+| `width-logo` / `height-logo` | `w-logo`, `h-logo` | Logo box |
+| `spacing-pattern` | via `.bg-auth-pattern` | Watermark tile size |
+
+New visual values from Figma go into `@theme` first; components only consume the generated utilities.
+
+### Lighthouse (Frontend)
+
+Target scores for `apps/web` — each category must be **≥ 90**:
+
+| Category | Minimum |
+|----------|---------|
+| Performance | 90 |
+| Accessibility | 90 |
+| Best Practices | 90 |
+| SEO | 90 |
+
+**How to measure**
+
+- Always audit the **production preview**, never `pnpm dev` / Vite HMR (unminified React and `@vite/client` tank Performance).
+- Prefer: `pnpm preview:web`, then Lighthouse on that URL in an **incognito** window (no extensions).
+- Automated a11y baseline: `pnpm test:web:a11y` (axe / WCAG AA in Vitest). Complements Lighthouse; does **not** replace contrast checks in a real browser.
+
+**Hardening rules (keep scores)**
+
+- Self-host fonts (`@fontsource` / local `woff2` + `font-display: swap`). Do **not** add render-blocking Google Fonts (or similar) CSS.
+- Prefer modern image formats (WebP/AVIF) sized to display (@1x/@2x); use `<picture>`, intrinsic `width`/`height`, and LCP hints (`fetchPriority="high"`, preload in `index.html` when the LCP image is known).
+- Keep decorative watermarks as lightweight SVG/CSS — never large raster fills.
+- Document SEO basics: meaningful `<title>`, `meta description`, valid `public/robots.txt`, correct `html lang` (app copy is `pt-BR`).
+- Preserve accessibility landmarks (`main`, labels, focusable controls). Fix Lighthouse a11y failures before merging UI work.
+- Ignore DevTools noise from browser extensions (`chrome-extension://…`, empty CSP Issues from extensions) when interpreting reports.
 
 ## Backend (`apps/api`)
 

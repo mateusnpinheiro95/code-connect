@@ -2,7 +2,11 @@ import { AuthTemplate } from '../templates/AuthTemplate'
 import { LoginForm } from '../organisms/LoginForm'
 import { SocialLoginSection } from '../organisms/SocialLoginSection'
 
-export function LoginPage() {
+interface LoginPageProps {
+  onNavigateToRegister?: () => void
+}
+
+export function LoginPage({ onNavigateToRegister }: LoginPageProps) {
   const handleLogin = (data: { email: string; password: string; rememberMe: boolean }) => {
     console.log('Login data:', data)
     // TODO: Implement login logic
@@ -25,17 +29,22 @@ export function LoginPage() {
 
   const handleRegisterClick = () => {
     console.log('Register clicked')
-    // TODO: Navigate to register page
+    onNavigateToRegister?.()
   }
 
   return (
     <AuthTemplate
       bannerImage="/banner_login.png"
       bannerAlt="Code Connect Login"
+      bannerWidth={814}
+      bannerHeight={1272}
       title="Login"
       subtitle="Boas-vindas! Faça seu login."
       footerText="Ainda não tem conta?"
       footerLinkText="Crie seu cadastro!"
+      footerHref="#cadastro"
+      footerIcon="register"
+      footerLayout="stack"
       onFooterLinkClick={handleRegisterClick}
     >
       <div className="flex w-full flex-col gap-8">

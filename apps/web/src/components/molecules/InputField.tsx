@@ -12,8 +12,8 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     const inputId = id || label.toLowerCase().replace(/\s+/g, '-')
 
     return (
-      <div className="w-full">
-        <label htmlFor={inputId} className="mb-2 block text-lg text-text-primary">
+      <div className="flex w-full flex-col gap-2">
+        <label htmlFor={inputId} className="text-body text-text-primary">
           {label}
         </label>
         <Input
@@ -23,7 +23,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           {...props}
         />
         {error && (
-          <p className="mt-1 text-sm text-error">{error}</p>
+          <p className="text-body-sm text-error">{error}</p>
         )}
       </div>
     )
