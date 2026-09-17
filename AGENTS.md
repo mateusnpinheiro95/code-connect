@@ -24,6 +24,7 @@ pnpm lint:web / lint:api
 pnpm test:api
 pnpm test:web     # vitest (watch)
 pnpm test:web:a11y # WCAG AA automated checks (axe / vitest-axe)
+pnpm preview:web  # build:web + start:web (Lighthouse / prod preview)
 ```
 
 Package manager is **pnpm** only (`packageManager` in root `package.json`). Do not introduce npm/yarn lockfiles.
@@ -79,6 +80,32 @@ Font family: `font-sans` → Prompt (defined in `@theme`).
 | `spacing-pattern` | via `.bg-auth-pattern` | Watermark tile size |
 
 New visual values from Figma go into `@theme` first; components only consume the generated utilities.
+
+### Lighthouse (Frontend)
+
+Target scores for `apps/web` — each category must be **≥ 90**:
+
+| Category | Minimum |
+|----------|---------|
+| Performance | 90 |
+| Accessibility | 90 |
+| Best Practices | 90 |
+| SEO | 90 |
+
+**How to measure**
+
+- Always audit the **production preview**, never `pnpm dev` / Vite HMR (unminified React and `@vite/client` tank Performance).
+- Prefer: `pnpm preview:web`, then Lighthouse on that URL in an **incognito** window (no extensions).
+- Automated a11y baseline: `pnpm test:web:a11y` (axe / WCAG AA in Vitest). Complements Lighthouse; does **not** replace contrast checks in a real browser.
+
+**Hardening rules (keep scores)**
+
+- Self-host fonts (`@fontsource` / local `woff2` + `font-display: swap`). Do **not** add render-blocking Google Fonts (or similar) CSS.
+- Prefer modern image formats (WebP/AVIF) sized to display (@1x/@2x); use `<picture>`, intrinsic `width`/`height`, and LCP hints (`fetchPriority="high"`, preload in `index.html` when the LCP image is known).
+- Keep decorative watermarks as lightweight SVG/CSS — never large raster fills.
+- Document SEO basics: meaningful `<title>`, `meta description`, valid `public/robots.txt`, correct `html lang` (app copy is `pt-BR`).
+- Preserve accessibility landmarks (`main`, labels, focusable controls). Fix Lighthouse a11y failures before merging UI work.
+- Ignore DevTools noise from browser extensions (`chrome-extension://…`, empty CSP Issues from extensions) when interpreting reports.
 
 ## Backend (`apps/api`)
 
