@@ -1,0 +1,24 @@
+{
+  "name": "code-connect",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo com apps React (Vite) e NestJS",
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api start:dev",
+    "build:web": "pnpm --filter web build",
+    "build:api": "pnpm --filter api build",
+    "start:web": "pnpm --filter web preview",
+    "start:api": "pnpm --filter api start",
+    "start:api:prod": "pnpm --filter api start:prod",
+    "lint:web": "pnpm --filter web lint",
+    "lint:api": "pnpm --filter api lint",
+    "test:web": "pnpm --filter web test",
+    "test:api": "pnpm --filter api test",
+    "dev": "pnpm --parallel --filter web --filter api \"/^(dev|start:dev)$/\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@12.4.2"
+}

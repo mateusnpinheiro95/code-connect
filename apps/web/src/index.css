@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #81fe88;
+  --color-primary-dark: #6ee675;
+  --color-on-primary: #132e35;
+  --color-dark: #00090e;
+  --color-dark-card: #171d1f;
+  --color-dark-lighter: #888888;
+  --color-text-primary: #e1e1e1;
+  --color-text-secondary: #888888;
+  --color-error: #ff6b6b;
+  --font-sans: "Prompt", system-ui, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    @apply min-h-full w-full;
+  }
+
+  body {
+    @apply m-0 bg-dark font-sans text-text-primary antialiased;
+  }
+
+  #root {
+    @apply flex min-h-svh flex-col;
+  }
+}
