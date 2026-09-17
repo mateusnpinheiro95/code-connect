@@ -4,9 +4,13 @@ import { InputField } from '../molecules/InputField'
 import { RememberMeCheckbox } from '../molecules/RememberMeCheckbox'
 import { Button } from '../atoms/Button'
 
-interface LoginFormProps {
-  onSubmit: (data: { email: string; password: string; rememberMe: boolean }) => void
-  onForgotPassword?: () => void
+interface RegisterFormProps {
+  onSubmit: (data: {
+    name: string
+    email: string
+    password: string
+    rememberMe: boolean
+  }) => void
 }
 
 function ArrowForwardIcon() {
@@ -30,23 +34,33 @@ function ArrowForwardIcon() {
   )
 }
 
-export function LoginForm({ onSubmit, onForgotPassword }: LoginFormProps) {
+export function RegisterForm({ onSubmit }: RegisterFormProps) {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    onSubmit({ email, password, rememberMe })
+    onSubmit({ name, email, password, rememberMe })
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex w-full flex-col gap-8">
       <div className="flex w-full flex-col gap-4">
         <InputField
-          label="Email ou usuário"
+          label="Nome"
           type="text"
-          placeholder="usuario123"
+          placeholder="Nome completo"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+
+        <InputField
+          label="Email"
+          type="email"
+          placeholder="Digite seu email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -65,13 +79,12 @@ export function LoginForm({ onSubmit, onForgotPassword }: LoginFormProps) {
           <RememberMeCheckbox
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
-            onForgotPassword={onForgotPassword}
           />
         </div>
       </div>
 
       <Button type="submit" fullWidth>
-        Login
+        Cadastrar
         <ArrowForwardIcon />
       </Button>
     </form>

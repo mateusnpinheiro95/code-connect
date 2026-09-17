@@ -8,7 +8,7 @@ export function Divider({ text, className = '' }: DividerProps) {
     return (
       <div className={`flex items-center gap-4 ${className}`}>
         <div className="h-px flex-1 bg-dark-lighter/60" />
-        <span className="text-[15px] text-text-primary whitespace-nowrap">{text}</span>
+        <span className="text-body-sm text-text-primary whitespace-nowrap">{text}</span>
         <div className="h-px flex-1 bg-dark-lighter/60" />
       </div>
     )

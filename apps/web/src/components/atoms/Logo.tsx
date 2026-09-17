@@ -7,7 +7,7 @@ export function Logo({ className = '' }: LogoProps) {
     <div
       role="img"
       aria-label="code connect"
-      className={`relative h-10 w-[127px] shrink-0 overflow-hidden ${className}`}
+      className={`relative h-logo w-logo shrink-0 overflow-hidden ${className}`}
     >
       <div className="absolute inset-[35.48%_88.04%_6.09%_0]">
         <img

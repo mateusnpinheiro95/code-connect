@@ -14,7 +14,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-lg font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50'
+    'inline-flex items-center justify-center gap-2 rounded-button px-4 py-3 text-body font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50'
 
   const variantStyles = {
     primary: 'bg-primary text-on-primary hover:bg-primary-dark',

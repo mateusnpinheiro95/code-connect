@@ -9,11 +9,13 @@
     "build:web": "pnpm --filter web build",
     "build:api": "pnpm --filter api build",
     "start:web": "pnpm --filter web preview",
+    "preview:web": "pnpm build:web && pnpm start:web",
     "start:api": "pnpm --filter api start",
     "start:api:prod": "pnpm --filter api start:prod",
     "lint:web": "pnpm --filter web lint",
     "lint:api": "pnpm --filter api lint",
     "test:web": "pnpm --filter web test",
+    "test:web:a11y": "pnpm --filter web test:a11y",
     "test:api": "pnpm --filter api test",
     "dev": "pnpm --parallel --filter web --filter api \"/^(dev|start:dev)$/\""
   },

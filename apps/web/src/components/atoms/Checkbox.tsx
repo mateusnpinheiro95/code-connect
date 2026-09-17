@@ -9,7 +9,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ label, className = '', id, ...props }, ref) => {
     return (
       <div className="flex items-start gap-2">
-        <span className="relative mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded border-2 border-dark-lighter">
+        <span className="relative inline-flex size-5 shrink-0 items-center justify-center rounded-input border-2 border-dark-lighter p-0.5 has-[:checked]:border-primary">
           <input
             ref={ref}
             type="checkbox"
@@ -18,7 +18,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             {...props}
           />
           <svg
-            className="pointer-events-none size-4 text-text-primary opacity-0 peer-checked:opacity-100"
+            className="pointer-events-none size-4 text-primary opacity-0 peer-checked:opacity-100"
             viewBox="0 0 12 12"
             fill="none"
             aria-hidden="true"
@@ -33,7 +33,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           </svg>
         </span>
         {label && (
-          <label htmlFor={id} className="cursor-pointer text-[15px] text-text-secondary">
+          <label htmlFor={id} className="cursor-pointer text-body-sm text-text-secondary">
             {label}
           </label>
         )}
