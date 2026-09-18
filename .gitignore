@@ -21,7 +21,8 @@ yarn-error.log*
 # OS / IDE
 .DS_Store
 .idea
-.cursor
+.cursor/*
+!.cursor/BUGBOT.md
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
