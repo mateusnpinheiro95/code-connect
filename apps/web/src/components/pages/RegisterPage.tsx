@@ -1,20 +1,35 @@
+import { useState } from 'react'
 import { AuthTemplate } from '../templates/AuthTemplate'
 import { RegisterForm } from '../organisms/RegisterForm'
 import { SocialLoginSection } from '../organisms/SocialLoginSection'
+import { register } from '../../services/auth'
+import { getApiErrorMessage } from '../../services/errors'
 
 interface RegisterPageProps {
   onNavigateToLogin?: () => void
 }
 
 export function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
-  const handleRegister = (data: {
+  const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleRegister = async (data: {
     name: string
     email: string
     password: string
     rememberMe: boolean
   }) => {
-    console.log('Register data:', data)
-    // TODO: Implement register logic
+    setError(null)
+    setIsSubmitting(true)
+
+    try {
+      await register(data.name, data.email, data.password)
+      onNavigateToLogin?.()
+    } catch (err) {
+      setError(getApiErrorMessage(err, 'Não foi possível criar a conta.'))
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleGithubLogin = () => {
@@ -28,7 +43,6 @@ export function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
   }
 
   const handleLoginClick = () => {
-    console.log('Login clicked')
     onNavigateToLogin?.()
   }
 
@@ -48,7 +62,19 @@ export function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
       onFooterLinkClick={handleLoginClick}
     >
       <div className="flex w-full flex-col gap-8">
+        {error ? (
+          <p role="alert" className="text-body-sm text-error">
+            {error}
+          </p>
+        ) : null}
+
         <RegisterForm onSubmit={handleRegister} />
+
+        {isSubmitting ? (
+          <p className="text-body-sm text-text-secondary" aria-live="polite">
+            Cadastrando…
+          </p>
+        ) : null}
 
         <SocialLoginSection
           onGithubLogin={handleGithubLogin}

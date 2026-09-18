@@ -1,15 +1,40 @@
+import { useState } from 'react'
 import { AuthTemplate } from '../templates/AuthTemplate'
 import { LoginForm } from '../organisms/LoginForm'
 import { SocialLoginSection } from '../organisms/SocialLoginSection'
+import { login } from '../../services/auth'
+import { getApiErrorMessage } from '../../services/errors'
+import { setStoredToken } from '../../services/token'
 
 interface LoginPageProps {
   onNavigateToRegister?: () => void
+  onLoginSuccess?: () => void
 }
 
-export function LoginPage({ onNavigateToRegister }: LoginPageProps) {
-  const handleLogin = (data: { email: string; password: string; rememberMe: boolean }) => {
-    console.log('Login data:', data)
-    // TODO: Implement login logic
+export function LoginPage({
+  onNavigateToRegister,
+  onLoginSuccess,
+}: LoginPageProps) {
+  const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleLogin = async (data: {
+    email: string
+    password: string
+    rememberMe: boolean
+  }) => {
+    setError(null)
+    setIsSubmitting(true)
+
+    try {
+      const { access_token } = await login(data.email, data.password)
+      setStoredToken(access_token)
+      onLoginSuccess?.()
+    } catch (err) {
+      setError(getApiErrorMessage(err, 'Email ou senha inválidos.'))
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleForgotPassword = () => {
@@ -28,7 +53,6 @@ export function LoginPage({ onNavigateToRegister }: LoginPageProps) {
   }
 
   const handleRegisterClick = () => {
-    console.log('Register clicked')
     onNavigateToRegister?.()
   }
 
@@ -48,10 +72,22 @@ export function LoginPage({ onNavigateToRegister }: LoginPageProps) {
       onFooterLinkClick={handleRegisterClick}
     >
       <div className="flex w-full flex-col gap-8">
+        {error ? (
+          <p role="alert" className="text-body-sm text-error">
+            {error}
+          </p>
+        ) : null}
+
         <LoginForm
           onSubmit={handleLogin}
           onForgotPassword={handleForgotPassword}
         />
+
+        {isSubmitting ? (
+          <p className="text-body-sm text-text-secondary" aria-live="polite">
+            Entrando…
+          </p>
+        ) : null}
 
         <SocialLoginSection
           onGithubLogin={handleGithubLogin}

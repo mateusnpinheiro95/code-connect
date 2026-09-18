@@ -117,6 +117,20 @@ Follow REST principles:
 - Consistent representations (JSON); use query params for filtering/pagination/sorting, not alternate endpoints when avoidable.
 - Nest controllers map cleanly to resources; keep business logic in services.
 
+### Feature docs (agent context)
+
+Living docs under `apps/api/docs/` describe **what already exists** and **how to extend it**. They are for agents implementing the next feature — not only human API reference.
+
+| Doc | When to read |
+|-----|----------------|
+| [`apps/api/docs/auth.md`](apps/api/docs/auth.md) | JWT, guards, users, protected routes, Swagger auth |
+
+**Rules**
+
+- Before related work, **read** the matching doc and reuse existing modules/guards/DTOs.
+- After changing that area, **update** the same doc so it matches the code.
+- When shipping a new API domain, add `apps/api/docs/<feature>.md` in the same agent-context style (what exists, recipes, decisions).
+
 ## Git
 
 Use **Conventional Commits** for the whole monorepo:
@@ -135,7 +149,16 @@ Scopes when useful: `web`, `api`, or a feature name. Example: `feat(web): add Bu
 - Respect root `.gitignore` (and any app-level ignore). Never commit `node_modules`, `dist`, `.env`, or coverage output.
 - When adding root scripts, mirror the existing `pnpm --filter <app> <script>` pattern.
 
+## Plan → Execute (when using Plan mode)
+
+1. **Stronger model → plan** — concrete scope, files, contracts, todos (session plan `.md`).
+2. **User reviews / approves** — do not implement until approved.
+3. **Cheaper good model → execute** — follow the approved plan; do not redesign mid-flight.
+4. **Update feature docs** — create/update `apps/api/docs/<feature>.md` (agent context for next features; see `auth.md`).
+
+Session plan ≠ feature doc: plan guides *this* delivery; `apps/api/docs/` guides *future* work.
+
 ## Scope of changes
 
 - Touch only files needed for the task.
-- Do not refactor unrelated apps or add docs/markdown unless asked.
+- Do not refactor unrelated apps or add docs/markdown unless asked (feature docs under `apps/api/docs/` are an exception when shipping/changing that domain).
